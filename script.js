@@ -70,7 +70,7 @@ const displayMovments = function (movements, sort = false) {
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
-    <div class="movements__value">${mov}€</div>
+    <div class="movements__value">${mov.toFixed(2)}€</div>
   </div>
     
     `;
@@ -86,7 +86,7 @@ const calcDisplayBalance = function (acc) {
     return acc + mov;
   }, 0);
 
-  labelBalance.textContent = `${acc.balance}€`;
+  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 // calcDisplayBalance(account1.movements);
@@ -95,13 +95,13 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov);
-  labelSumIn.textContent = `${incomes}€`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov);
 
-  labelSumOut.textContent = `${Math.abs(out)}€`;
+  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -109,7 +109,7 @@ const calcDisplaySummary = function (acc) {
     .filter(int => int > 1)
     .reduce((acc, deposite) => acc + deposite, 0);
 
-  labelSumInterest.textContent = `${interest}€`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
 };
 
 // calcDisplaySummary(account1.movements);
@@ -176,7 +176,7 @@ btnTransfer.addEventListener('click', function (e) {
 
 btnLoan.addEventListener('click', e => {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
     currentAccount.movements.push(amount);
@@ -209,3 +209,76 @@ btnSort.addEventListener('click', function (e) {
 });
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
+
+const arr = [1, 2, 3, 4, 5, 6];
+arr.fill(25, 2, 5);
+console.log(arr);
+
+const arr2 = new Array(5);
+arr2.fill(1, 2, 3);
+console.log(arr2);
+
+const x = Array.from({ length: 10 }, () => 4);
+console.log(x);
+const z = Array.from({ length: 10 }, (curr, i) => i);
+console.log(z);
+
+labelBalance.addEventListener('click', () => {
+  const ui = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(ui.map(el => el.textContent));
+
+  const ui2 = [...document.querySelectorAll('.movements__value')]
+    .map(el => Number(el.textContent.replace('€', '')))
+    .sort((a, b) => a - b);
+  console.log(ui2);
+});
+
+const { deposite, widthral } = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce(
+    (sums, cur) => {
+      // cur > 0 ? (sums.deposite += cur) : (sums.widthral += cur);
+      // return sums;
+      sums[cur > 0 ? 'deposite' : 'widthral'] += cur;
+      return sums;
+    },
+    { deposite: 0, widthral: 0 }
+  );
+console.log(deposite, widthral);
+
+/// coding challange
+
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] },
+];
+
+dogs.forEach(cur => {
+  cur.recFood = cur.weight ** 0.75 * 28;
+});
+
+console.log(dogs);
+const dogSarah = dogs.find(dog => dog.owners.includes('Sarah'));
+console.log(
+  `Sarah dogs is eating ${
+    dogSarah.curFood > dogSarah.recFood ? 'much' : 'little'
+  }`
+);
+
+const ownersEatTooMuch = dogs
+  .filter(dog => dog.curFood > dog.recFood)
+  .map(owner => owner.owners)
+  .flat();
+console.log(`${ownersEatTooMuch.join(' and ')} 's dog eat too much`);
+
+// console.log(dogs.some(dog => dog.recFood === dog.curFood));
+// console.log(dogs.some(dog => dog.recFood === dog.curFood));
+
+console.log(Number.isInteger(20.0));
+
+const randomInt = (min, max) => Math.trunc(Math.random() * (max - min) + min);
+
+console.log(randomInt(10, 20));
