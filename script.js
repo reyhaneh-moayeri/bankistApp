@@ -100,12 +100,15 @@ const displayMovments = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovmentDate(date);
-
+    const formatedMov = new Intl.NumberFormat(acc.locale, {
+      style: 'currency',
+      currency: acc.currency,
+    }).format(mov);
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
     <div class="movements__date">${displayDate}</div>
-    <div class="movements__value">${mov.toFixed(2)}€</div>
+    <div class="movements__value">${formatedMov}</div>
   </div>
     
     `;
@@ -279,3 +282,11 @@ btnSort.addEventListener('click', function (e) {
 /////////////////////////////////////////////////
 
 // operation with Dates
+
+const num = 2864;
+const option = {
+  style: 'currency',
+  unit: 'celsius',
+  currency: 'EUR',
+};
+console.log(new Intl.NumberFormat('de-DE', option).format(num));
