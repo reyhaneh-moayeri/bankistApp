@@ -82,10 +82,11 @@ const formatMovmentDate = date => {
   if (daysPassed === 1) return 'Yesterday';
   if (daysPassed <= 7) return `${daysPassed} days ago`;
   else {
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    // const day = `${date.getDate()}`.padStart(2, 0);
+    // const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`
+    return new Intl.DateTimeFormat(currentAccount.local).format(date);
   }
 };
 
@@ -167,7 +168,7 @@ const updateUI = function (acc) {
   calcDisplaySummary(acc);
 };
 let currentAccount;
-// faked log in
+// faked always log in
 
 currentAccount = account1;
 updateUI(currentAccount);
@@ -187,14 +188,31 @@ btnLogin.addEventListener('click', function (e) {
       currentAccount.owner.split(' ')[0]
     }`;
     containerApp.style.opacity = 1;
-    const now = new Date();
-    const day = `${now.getDate()}`.padStart(2, 0);
-    const month = `${now.getMonth() + 1}`.padStart(2, 0);
-    const year = now.getFullYear();
-    const hour = `${now.getHours()}`.padStart(2, 0);
-    const min = `${now.getMinutes()}`.padStart(2, 0);
+    // const now = new Date();
+    // const day = `${now.getDate()}`.padStart(2, 0);
+    // const month = `${now.getMonth() + 1}`.padStart(2, 0);
+    // const year = now.getFullYear();
+    // const hour = `${now.getHours()}`.padStart(2, 0);
+    // const min = `${now.getMinutes()}`.padStart(2, 0);
 
-    labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+    // labelDate.textContent = `${day}/${month}/${year}, ${hour}:${min}`;
+
+    const options = {
+      hour: 'numeric',
+      minute: 'numeric',
+      day: 'numeric',
+      month: 'numeric',
+      year: 'numeric',
+      weekday: 'long',
+    };
+
+    const now = new Date();
+    labelDate.textContent = new Intl.DateTimeFormat(
+      currentAccount.locale,
+      options
+    ).format(now);
+    const local = navigator.language;
+    console.log(local);
 
     inputLoginPin.value = inputLoginUsername.value = '';
     inputLoginPin.blur();
