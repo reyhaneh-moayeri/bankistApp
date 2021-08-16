@@ -90,6 +90,13 @@ const formatMovmentDate = date => {
   }
 };
 
+const FormatCur = function (value, locale, currency) {
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currency,
+  }).format(value);
+};
+
 const displayMovments = function (acc, sort = false) {
   containerMovements.innerHTML = '';
 
@@ -100,10 +107,7 @@ const displayMovments = function (acc, sort = false) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const date = new Date(acc.movementsDates[i]);
     const displayDate = formatMovmentDate(date);
-    const formatedMov = new Intl.NumberFormat(acc.locale, {
-      style: 'currency',
-      currency: acc.currency,
-    }).format(mov);
+    const formatedMov = FormatCur(mov, acc.locale, acc.currency);
     const html = `
     <div class="movements__row">
     <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
@@ -124,7 +128,11 @@ const calcDisplayBalance = function (acc) {
     return acc + mov;
   }, 0);
 
-  labelBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  labelBalance.textContent = `${FormatCur(
+    acc.balance,
+    acc.locale,
+    acc.currency
+  )}`;
 };
 
 // calcDisplayBalance(account1.movements);
