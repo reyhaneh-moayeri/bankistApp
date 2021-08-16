@@ -128,11 +128,7 @@ const calcDisplayBalance = function (acc) {
     return acc + mov;
   }, 0);
 
-  labelBalance.textContent = `${FormatCur(
-    acc.balance,
-    acc.locale,
-    acc.currency
-  )}`;
+  labelBalance.textContent = FormatCur(acc.balance, acc.locale, acc.currency);
 };
 
 // calcDisplayBalance(account1.movements);
@@ -141,13 +137,13 @@ const calcDisplaySummary = function (acc) {
   const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov);
-  labelSumIn.textContent = `${incomes.toFixed(2)}€`;
+  labelSumIn.textContent = FormatCur(incomes, acc.locale, acc.currency);
 
   const out = acc.movements
     .filter(mov => mov < 0)
     .reduce((acc, mov) => acc + mov);
 
-  labelSumOut.textContent = `${Math.abs(out).toFixed(2)}€`;
+  labelSumOut.textContent = FormatCur(Math.abs(out), acc.locale, acc.currency);
 
   const interest = acc.movements
     .filter(mov => mov > 0)
@@ -155,7 +151,7 @@ const calcDisplaySummary = function (acc) {
     .filter(int => int > 1)
     .reduce((acc, deposite) => acc + deposite, 0);
 
-  labelSumInterest.textContent = `${interest.toFixed(2)}€`;
+  labelSumInterest.textContent = FormatCur(interest, acc.locale, acc.currency);
 };
 
 // calcDisplaySummary(account1.movements);
